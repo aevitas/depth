@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Depth.Client.MovieDb.Models
 {
-    public class Movie
+    public class MovieDetails
     {
         [JsonProperty("adult")]
         public bool IsAdult { get; set; }

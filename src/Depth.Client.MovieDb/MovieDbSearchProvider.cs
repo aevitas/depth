@@ -26,7 +26,7 @@ namespace Depth.Client.MovieDb
             _httpClient = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async Task<IEnumerable<Movie>> SearchAsync(Action<MovieQueryOptions> options)
+        public async Task<IEnumerable<MovieEntry>> SearchAsync(Action<MovieQueryOptions> options)
         {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
@@ -45,7 +45,7 @@ namespace Depth.Client.MovieDb
             {
                 case var r when response.IsSuccessStatusCode:
                     var content = await r.Content.ReadAsStringAsync();
-                    return new [] {DeserializeToMovie(content)};
+                    return DeserializeEntries(content);
 
                 case var _ when response.StatusCode == HttpStatusCode.Unauthorized:
                     throw new AuthenticationException("Could not authenticate to MovieDB with the provided API key!");
@@ -56,18 +56,20 @@ namespace Depth.Client.MovieDb
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Movie DeserializeToMovie(string serialized)
+        private static IEnumerable<MovieEntry> DeserializeEntries(string serialized)
         {
-            return JsonConvert.DeserializeObject<Movie>(serialized);
+            var page = JsonConvert.DeserializeObject<PaginatedSearchResult>(serialized);
+
+            return page.Results;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private string CreateRequestUri(MovieQueryOptions opts)
         {
-            var uri = $"{_options.BaseUri}/search/movie?api_key={_options.ApiKey}&query={WebUtility.UrlEncode(opts.Query)}";
-
-            return uri;
+            return $"{_options.BaseUri}/search/movie?api_key={_options.ApiKey}&query={WebUtility.UrlEncode(opts.Query)}";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsValidQuery(MovieQueryOptions options)
         {
             if (options == null)
