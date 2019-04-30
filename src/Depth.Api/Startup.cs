@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Net.Http;
+using Depth.Client.MovieDb;
+using Depth.Client.MovieDb.Abstractions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +20,13 @@ namespace Depth.Api
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<MovieDbOptions>(Configuration.GetSection("MovieDb"));
+
+            services.AddHttpContextAccessor();
+            services.AddSingleton<HttpClient>();
+
+            services.AddScoped<IMovieSearchProvider, MovieDbSearchProvider>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
         
