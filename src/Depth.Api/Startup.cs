@@ -25,7 +25,8 @@ namespace Depth.Api
             services.AddHttpContextAccessor();
             services.AddSingleton<HttpClient>();
 
-            services.AddScoped<IMovieSearchProvider, MovieDbSearchProvider>();
+            services.AddScoped<IMovieSearchProvider, MovieDbClient>();
+            services.AddScoped<IMovieDetailProvider, MovieDbClient>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

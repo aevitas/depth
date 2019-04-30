@@ -12,12 +12,12 @@ using Newtonsoft.Json;
 
 namespace Depth.Client.MovieDb
 {
-    public class MovieDbSearchProvider : IMovieSearchProvider
+    public class MovieDbClient : IMovieSearchProvider, IMovieDetailProvider
     {
         private readonly MovieDbOptions _options;
         private readonly HttpClient _httpClient;
 
-        public MovieDbSearchProvider(IOptions<MovieDbOptions> options, HttpClient client)
+        public MovieDbClient(IOptions<MovieDbOptions> options, HttpClient client)
         {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
@@ -38,14 +38,35 @@ namespace Depth.Client.MovieDb
             if (!IsValidQuery(o))
                 throw new ArgumentException("The specified movie query is not valid; make sure it has at least a query and is not null.");
 
-            var uri = CreateRequestUri(o);
+            var uri = $"{_options.BaseUri}/search/movie?api_key={_options.ApiKey}&query={WebUtility.UrlEncode(o.Query)}";
             var response = await _httpClient.GetAsync(uri);
 
             switch (response)
             {
                 case var r when response.IsSuccessStatusCode:
                     var content = await r.Content.ReadAsStringAsync();
-                    return DeserializeEntries(content);
+                    var page = JsonConvert.DeserializeObject<PaginatedSearchResult>(content);
+
+                    return page.Results;
+                case var _ when response.StatusCode == HttpStatusCode.Unauthorized:
+                    throw new AuthenticationException("Could not authenticate to MovieDB with the provided API key!");
+
+                default:
+                    return null;
+            }
+        }
+
+        public async Task<MovieDetail> GetDetailAsync(int id)
+        {
+            var uri = $"{_options.BaseUri}/movie/{id}?api_key={_options.ApiKey}";
+            var response = await _httpClient.GetAsync(uri);
+
+            switch (response)
+            {
+                case var r when response.IsSuccessStatusCode:
+                    var content = await r.Content.ReadAsStringAsync();
+
+                    return JsonConvert.DeserializeObject<MovieDetail>(content);
 
                 case var _ when response.StatusCode == HttpStatusCode.Unauthorized:
                     throw new AuthenticationException("Could not authenticate to MovieDB with the provided API key!");
@@ -56,20 +77,6 @@ namespace Depth.Client.MovieDb
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static IEnumerable<MovieEntry> DeserializeEntries(string serialized)
-        {
-            var page = JsonConvert.DeserializeObject<PaginatedSearchResult>(serialized);
-
-            return page.Results;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private string CreateRequestUri(MovieQueryOptions opts)
-        {
-            return $"{_options.BaseUri}/search/movie?api_key={_options.ApiKey}&query={WebUtility.UrlEncode(opts.Query)}";
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsValidQuery(MovieQueryOptions options)
         {
             if (options == null)
@@ -77,7 +84,7 @@ namespace Depth.Client.MovieDb
 
             if (string.IsNullOrWhiteSpace(options.Query))
                 return false;
-            
+
             return true;
         }
     }

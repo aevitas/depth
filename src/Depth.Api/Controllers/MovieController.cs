@@ -10,13 +10,15 @@ namespace Depth.Api.Controllers
     public class MovieController : Controller
     {
         private readonly IMovieSearchProvider _searchProvider;
+        private readonly IMovieDetailProvider _detailProvider;
 
-        public MovieController(IMovieSearchProvider searchProvider)
+        public MovieController(IMovieSearchProvider searchProvider, IMovieDetailProvider detailProvider)
         {
             _searchProvider = searchProvider ?? throw new ArgumentNullException(nameof(searchProvider));
+            _detailProvider = detailProvider ?? throw new ArgumentNullException(nameof(detailProvider));
         }
 
-        [Route("search")]
+        [HttpGet("search")]
         public async Task<IActionResult> Search(string query, bool includeAdult = false)
         {
             var result = await _searchProvider.SearchAsync(opts =>
@@ -26,6 +28,17 @@ namespace Depth.Api.Controllers
             });
 
             if (result == null || !result.Any())
+                return NotFound();
+
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Detail(int id)
+        {
+            var result = await _detailProvider.GetDetailAsync(id);
+
+            if (result == null)
                 return NotFound();
 
             return Ok(result);

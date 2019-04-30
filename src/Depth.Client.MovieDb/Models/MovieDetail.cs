@@ -4,19 +4,19 @@ using Newtonsoft.Json;
 
 namespace Depth.Client.MovieDb.Models
 {
-    public class MovieDetails
+    public class MovieDetail
     {
         [JsonProperty("adult")]
-        public bool IsAdult { get; set; }
+        public bool? IsAdult { get; set; }
 
         [JsonProperty("backdrop_path")]
         public string BackdropPath { get; set; }
 
         [JsonProperty("budget")]
-        public long Budget { get; set; }
+        public long? Budget { get; set; }
 
         [JsonProperty("genres")]
-        public List<(int id, string name)> Genres { get; set; }
+        public List<KeyValuePair<int, string>> Genres { get; set; }
 
         [JsonProperty("homepage")]
         public string Homepage { get; set; }
@@ -31,7 +31,7 @@ namespace Depth.Client.MovieDb.Models
         public string Description { get; set; }
 
         [JsonProperty("popularity")]
-        public float Popularity { get; set; }
+        public float? Popularity { get; set; }
 
         [JsonProperty("poster_path")]
         public string PosterPath { get; set; }
@@ -43,7 +43,7 @@ namespace Depth.Client.MovieDb.Models
         public long Revenue { get; set; }
 
         [JsonProperty("runtime")]
-        public int Runtime { get; set; }
+        public int? Runtime { get; set; }
         
         [JsonProperty("status")]
         public string Status { get; set; }
@@ -55,9 +55,9 @@ namespace Depth.Client.MovieDb.Models
         public string Title { get; set; }
 
         [JsonProperty("vote_average")]
-        public float Rating { get; set; }
+        public float? Rating { get; set; }
 
         [JsonProperty("vote_count")]
-        public int VoteCount { get; set; }
+        public int? VoteCount { get; set; }
     }
 }
