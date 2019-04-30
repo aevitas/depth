@@ -2,7 +2,7 @@
 
 namespace Depth.Client.MovieDb
 {
-    public sealed class SearchOptions
+    public sealed class MovieQueryOptions
     {
         public string Query { get; set; }
 

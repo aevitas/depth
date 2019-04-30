@@ -6,23 +6,20 @@ namespace Depth.Client.MovieDb.Models
 {
     public class Movie
     {
-        [JsonProperty("vote_count")]
-        public int VoteCount { get; set; }
+        [JsonProperty("adult")]
+        public bool IsAdult { get; set; }
 
-        public long Id { get; set; }
+        [JsonProperty("backdrop_path")]
+        public string BackdropPath { get; set; }
 
-        [JsonProperty("video")]
-        public bool HasVideo { get; set; }
+        [JsonProperty("budget")]
+        public long Budget { get; set; }
 
-        [JsonProperty("vote_average")]
-        public float VoteAverage { get; set; }
+        [JsonProperty("genres")]
+        public List<(int id, string name)> Genres { get; set; }
 
-        public string Title { get; set; }
-
-        public float Popularity { get; set; }
-
-        [JsonProperty("poster_path")]
-        public string PosterPath { get; set; }
+        [JsonProperty("homepage")]
+        public string Homepage { get; set; }
 
         [JsonProperty("original_language")]
         public string OriginalLanguage { get; set; }
@@ -30,18 +27,37 @@ namespace Depth.Client.MovieDb.Models
         [JsonProperty("original_title")]
         public string OriginalTitle { get; set; }
 
-        [JsonProperty("genre_ids")]
-        public List<int> GenreIds { get; set; }
+        [JsonProperty("overview")]
+        public string Description { get; set; }
 
-        [JsonProperty("backdrop_path")]
-        public string BackdropPath { get; set; }
+        [JsonProperty("popularity")]
+        public float Popularity { get; set; }
 
-        [JsonProperty("adult")]
-        public bool IsAdult { get; set; }
-
-        public string Overview { get; set; }
+        [JsonProperty("poster_path")]
+        public string PosterPath { get; set; }
 
         [JsonProperty("release_date")]
-        public DateTime? ReleaseDate { get; set; }
+        public DateTimeOffset ReleaseDate { get; set; }
+
+        [JsonProperty("revenue")]
+        public long Revenue { get; set; }
+
+        [JsonProperty("runtime")]
+        public int Runtime { get; set; }
+        
+        [JsonProperty("status")]
+        public string Status { get; set; }
+
+        [JsonProperty("tagline")]
+        public string Tagline { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("vote_average")]
+        public float Rating { get; set; }
+
+        [JsonProperty("vote_count")]
+        public int VoteCount { get; set; }
     }
 }

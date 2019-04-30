@@ -7,6 +7,6 @@ namespace Depth.Client.MovieDb.Abstractions
 {
     public interface IMovieSearchProvider
     {
-        Task<IEnumerable<Movie>> SearchAsync(Action<SearchOptions> options);
+        Task<IEnumerable<Movie>> SearchAsync(Action<MovieQueryOptions> options);
     }
 }
