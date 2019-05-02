@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: microsoft/dotnet:2.2-sdk
+    steps:
+      - checkout
+      - run:
+          name: build
+          command: dotnet build src/Depth.sln
+  docker-image:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: image
+          command: |
+            TAG=latest
+            IMAGE=depth
+            docker build -t $IMAGE:$TAG .
+            docker login $REGISTRY_URI -u $REGISTRY_USER -p $REGISTRY_PASSWORD
+            docker tag $IMAGE:$TAG $REGISTRY_URI/$IMAGE:$TAG
+            docker push $REGISTRY_URI/$IMAGE:$TAG
+workflows:
+  version: 2
+  cd:
+    jobs:
+      - build
+      - docker-image:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
