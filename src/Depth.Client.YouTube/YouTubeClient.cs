@@ -35,13 +35,14 @@ namespace Depth.Client.YouTube
             request.MaxResults = maximumResultCount;
 
             var response = await request.ExecuteAsync();
-            var videos = response.Items.Where(i => i.Kind.Equals("youtube#video", StringComparison.OrdinalIgnoreCase));
+            var videos = response.Items.Where(i => i.Id.Kind.Equals("youtube#video", StringComparison.OrdinalIgnoreCase));
 
             return videos.Select(v => new VideoEntry
             {
                 Description = v.Snippet.Description,
                 Title = v.Snippet.Title,
-                PublishedAt = v.Snippet.PublishedAt
+                PublishedAt = v.Snippet.PublishedAt,
+                Id = v.Id.VideoId
             });
         }
 

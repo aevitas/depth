@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Depth.Client.MovieDb\Depth.Client.MovieDb.csproj" />
+    <ProjectReference Include="..\Depth.Client.YouTube\Depth.Client.YouTube.csproj" />
   </ItemGroup>
 
 </Project>

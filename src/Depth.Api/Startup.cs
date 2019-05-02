@@ -1,6 +1,8 @@
 ﻿using System.Net.Http;
 using Depth.Client.MovieDb;
 using Depth.Client.MovieDb.Abstractions;
+using Depth.Client.YouTube;
+using Depth.Client.YouTube.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -21,12 +23,21 @@ namespace Depth.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<MovieDbOptions>(Configuration.GetSection("MovieDb"));
+            services.Configure<YouTubeOptions>(Configuration.GetSection("YouTube"));
 
             services.AddHttpContextAccessor();
             services.AddSingleton<HttpClient>();
-
+            
             services.AddScoped<IMovieSearchProvider, MovieDbClient>();
             services.AddScoped<IMovieDetailProvider, MovieDbClient>();
+            services.AddScoped<IVideoSearchProvider, YouTubeClient>();
+            services.AddScoped<IMovieTrailerProvider, YouTubeClient>();
+
+            services.AddRouting(opts =>
+            {
+                opts.LowercaseQueryStrings = true;
+                opts.LowercaseUrls = true;
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -37,7 +48,7 @@ namespace Depth.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseHttpsRedirection();
             app.UseMvc();
         }

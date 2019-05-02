@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Depth.Client.MovieDb.Abstractions;
+using Depth.Client.MovieDb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -19,7 +20,7 @@ namespace Depth.Api.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search(string query, bool includeAdult = false)
+        public async Task<ActionResult<MovieEntry>> Search(string query, bool includeAdult = false)
         {
             var result = await _searchProvider.SearchAsync(opts =>
             {
@@ -34,7 +35,7 @@ namespace Depth.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Detail(int id)
+        public async Task<ActionResult<MovieDetail>> Detail(int id)
         {
             var result = await _detailProvider.GetDetailAsync(id);
 
