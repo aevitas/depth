@@ -33,6 +33,8 @@ namespace Depth.Api
             services.AddScoped<IVideoSearchProvider, YouTubeClient>();
             services.AddScoped<IMovieTrailerProvider, YouTubeClient>();
 
+            services.AddMemoryCache();
+
             services.AddRouting(opts =>
             {
                 opts.LowercaseQueryStrings = true;
