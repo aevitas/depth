@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Depth.Api", "Depth.Api\Depth.Api.csproj", "{A6F6033F-02E3-487F-B801-8513FA2CF9BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Depth.Client.MovieDb", "Depth.Client.MovieDb\Depth.Client.MovieDb.csproj", "{A632A05B-CE37-4874-BEA5-A359D1D99B73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Depth.Client.MovieDb", "Depth.Client.MovieDb\Depth.Client.MovieDb.csproj", "{A632A05B-CE37-4874-BEA5-A359D1D99B73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Depth.Client.YouTube", "Depth.Client.YouTube\Depth.Client.YouTube.csproj", "{A1245EB9-0094-4BDB-90BE-1EB099A63A18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A632A05B-CE37-4874-BEA5-A359D1D99B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A632A05B-CE37-4874-BEA5-A359D1D99B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A632A05B-CE37-4874-BEA5-A359D1D99B73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1245EB9-0094-4BDB-90BE-1EB099A63A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1245EB9-0094-4BDB-90BE-1EB099A63A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1245EB9-0094-4BDB-90BE-1EB099A63A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1245EB9-0094-4BDB-90BE-1EB099A63A18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

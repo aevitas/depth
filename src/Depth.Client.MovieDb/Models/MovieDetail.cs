@@ -16,7 +16,7 @@ namespace Depth.Client.MovieDb.Models
         public long? Budget { get; set; }
 
         [JsonProperty("genres")]
-        public List<KeyValuePair<int, string>> Genres { get; set; }
+        public List<(int id, string name)> Genres { get; set; }
 
         [JsonProperty("homepage")]
         public string Homepage { get; set; }
