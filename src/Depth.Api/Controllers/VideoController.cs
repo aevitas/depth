@@ -30,5 +30,16 @@ namespace Depth.Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("[action]")]
+        public async Task<ActionResult<VideoEntry>> Trailer(string movie)
+        {
+            var result = await _trailerProvider.GetTrailerAsync(movie);
+
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
+        }
     }
 }

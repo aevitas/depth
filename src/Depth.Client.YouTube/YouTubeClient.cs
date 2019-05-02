@@ -53,7 +53,7 @@ namespace Depth.Client.YouTube
 
             // Alright so, if the movie already contains the "trailer" keyword, we'll just use that for the search.
             // Otherwise, we're going to do a little manipulation so it contains trailer at the end.
-            var containsTrailer = movie.IndexOf("trailer", StringComparison.OrdinalIgnoreCase) != 0;
+            var containsTrailer = movie.IndexOf("trailer", StringComparison.OrdinalIgnoreCase) > 0;
             var query = containsTrailer ? movie : movie.TrimEnd(' ') + " trailer";
 
             var result = await SearchAsync(query, 1);
