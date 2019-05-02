@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Depth.Client.YouTube.Abstractions;
 using Depth.Client.YouTube.Models;
 using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Options;
 
 namespace Depth.Client.YouTube
 {
-    public class YouTubeClient
+    public class YouTubeClient : IVideoSearchProvider, IMovieTrailerProvider
     {
         private readonly YouTubeService _service;
 
@@ -42,6 +43,21 @@ namespace Depth.Client.YouTube
                 Title = v.Snippet.Title,
                 PublishedAt = v.Snippet.PublishedAt
             });
+        }
+
+        public async Task<VideoEntry> GetTrailerAsync(string movie)
+        {
+            if (string.IsNullOrWhiteSpace(movie))
+                throw new ArgumentNullException(nameof(movie));
+
+            // Alright so, if the movie already contains the "trailer" keyword, we'll just use that for the search.
+            // Otherwise, we're going to do a little manipulation so it contains trailer at the end.
+            var containsTrailer = movie.IndexOf("trailer", StringComparison.OrdinalIgnoreCase) != 0;
+            var query = containsTrailer ? movie : movie.TrimEnd(' ') + " trailer";
+
+            var result = await SearchAsync(query, 1);
+
+            return result.FirstOrDefault();
         }
     }
 }
