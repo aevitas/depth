@@ -57,7 +57,8 @@ namespace Depth.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
+            app.UseCors("PermissivePolicy");
             app.UseMvc();
         }
     }
