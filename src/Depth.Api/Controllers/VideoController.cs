@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Depth.Api.Extensions;
+using Depth.Api.Models;
 using Depth.Client.YouTube.Abstractions;
-using Depth.Client.YouTube.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Depth.Api.Controllers
@@ -24,8 +25,11 @@ namespace Depth.Api.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<ActionResult<IEnumerable<VideoEntry>>> Search(string query)
+        public async Task<ActionResult<IEnumerable<TrailerModel>>> Search(string query)
         {
+            if (string.IsNullOrWhiteSpace(query))
+                return NotFound();
+
             var key = GetSearchCacheKey(query);
             if (_memoryCache.TryGetValue(key, out var cachedValue))
                 return Ok(cachedValue);
@@ -35,14 +39,19 @@ namespace Depth.Api.Controllers
             if (!result.Any())
                 return NotFound();
 
-            _memoryCache.Set(key, result);
+            var models = result.Select(r => r.ToTrailerModel());
 
-            return Ok(result);
+            _memoryCache.Set(key, models);
+
+            return Ok(models);
         }
 
         [HttpGet("[action]")]
-        public async Task<ActionResult<VideoEntry>> Trailer(string movie)
+        public async Task<ActionResult<TrailerModel>> Trailer(string movie)
         {
+            if (string.IsNullOrWhiteSpace(movie))
+                return NotFound();
+
             var key = GetTrailerCacheKey(movie);
             if (_memoryCache.TryGetValue(key, out var cachedValue))
                 return Ok(cachedValue);
@@ -52,9 +61,11 @@ namespace Depth.Api.Controllers
             if (result == null)
                 return NotFound();
 
-            _memoryCache.Set(key, result);
+            var model = result.ToTrailerModel();
 
-            return Ok(result);
+            _memoryCache.Set(key, model);
+
+            return Ok(model);
         }
 
         private static string GetSearchCacheKey(string query) => $"video.search.{query}";
