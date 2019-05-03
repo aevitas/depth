@@ -41,6 +41,13 @@ namespace Depth.Api
                 opts.LowercaseUrls = true;
             });
 
+            services.AddCors(o => o.AddPolicy("PermissivePolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
         
