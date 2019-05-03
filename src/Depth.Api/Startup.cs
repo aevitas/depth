@@ -51,7 +51,6 @@ namespace Depth.Api
                 app.UseDeveloperExceptionPage();
             }
             
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
