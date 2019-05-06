@@ -12,6 +12,7 @@ namespace Depth.Api.Extensions
                 PublishedAt = entry.PublishedAt,
                 Description = entry.Description,
                 Title = entry.Title,
+                Id = entry.Id,
                 Uri = $"https://www.youtube.com/watch?v={entry.Id}"
             };
         }

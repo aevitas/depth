@@ -4,6 +4,8 @@ namespace Depth.Api.Models
 {
     public class TrailerModel
     {
+        public string Id { get; set; }
+
         public string Title { get; set; }
 
         public string Description { get; set; }
