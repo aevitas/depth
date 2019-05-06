@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Depth.Api.Extensions;
+using Depth.Api.Models;
 using Depth.Client.MovieDb.Abstractions;
 using Depth.Client.MovieDb.Models;
+using Depth.Client.YouTube.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Caching.Memory;
@@ -13,14 +16,15 @@ namespace Depth.Api.Controllers
     {
         private readonly IMovieDetailProvider _detailProvider;
         private readonly IMovieSearchProvider _searchProvider;
+        private readonly IMovieTrailerProvider _trailerProvider;
         private readonly IMemoryCache _memoryCache;
 
-        public MovieController(IMovieSearchProvider searchProvider, IMovieDetailProvider detailProvider,
+        public MovieController(IMovieSearchProvider searchProvider, IMovieDetailProvider detailProvider, IMovieTrailerProvider trailerProvider,
             IMemoryCache memoryCache)
-
         {
             _searchProvider = searchProvider ?? throw new ArgumentNullException(nameof(searchProvider));
             _detailProvider = detailProvider ?? throw new ArgumentNullException(nameof(detailProvider));
+            _trailerProvider = trailerProvider ?? throw new ArgumentNullException(nameof(trailerProvider));
             _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
@@ -47,21 +51,31 @@ namespace Depth.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<MovieDetail>> Detail(int id)
+        public async Task<ActionResult<MovieDetailModel>> Detail(int id)
         {
             var key = GetDetailCacheKey(id);
 
             if (_memoryCache.TryGetValue(key, out var cachedValue))
                 return Ok(cachedValue);
 
-            var result = await _detailProvider.GetDetailAsync(id);
+            var movie = await _detailProvider.GetDetailAsync(id);
 
-            if (result == null)
+            if (movie == null)
                 return NotFound();
 
-            _memoryCache.Set(key, result);
+            var trailer = await _trailerProvider.GetTrailerAsync(movie.Title);
 
-            return Ok(result);
+            var model = new MovieDetailModel
+            {
+                Movie = movie
+            };
+
+            if (trailer != null)
+                model.Trailer = trailer.ToTrailerModel();
+            
+            _memoryCache.Set(key, model);
+
+            return Ok(model);
         }
 
         private static string GetSearchCacheKey(string query) => $"movie.search.{query}";
